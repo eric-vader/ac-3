@@ -37,7 +37,7 @@ def show_solver(arcs: list, domains: dict, constraints: dict):
                 xi = edge[0]
                 new_domain = step[1][xi]
                 edges_to_reconsider = step[2]
-                show_row(edge, xi, new_domain, edges_to_reconsider)
+                show_row(edge, xi, new_domain, list(CSPSolver.worklist.queue))
 
 
 if __name__ == "__main__":
@@ -47,9 +47,9 @@ if __name__ == "__main__":
     arcs = [('a', 'b'), ('b', 'a'), ('b', 'c'), ('c', 'b'), ('c', 'a'), ('a', 'c')]
 
     domains = {
-        'a': [2, 3, 4, 5, 6, 7],
-        'b': [4, 5, 6, 7, 8, 9],
-        'c': [1, 2, 3, 4, 5]
+        'a': [1, 2, 3, 4],
+        'b': [1, 2, 3, 4],
+        'c': [1, 2, 3, 4],
     }
 
     # constraints:
@@ -59,13 +59,11 @@ if __name__ == "__main__":
     # b <= c + 2
     constraints = {
         ('a', 'b'): lambda a, b: a * 2 == b,
-        ('b', 'a'): lambda b, a: b == 2 * a,
-        ('a', 'c'): lambda a, c: a == c,
-        ('c', 'a'): lambda c, a: c == a,
-        ('b', 'c'): lambda b, c: b >= c - 2,
-        ('b', 'c'): lambda b, c: b <= c + 2,
-        ('c', 'b'): lambda c, b: b >= c - 2,
-        ('c', 'b'): lambda c, b: b <= c + 2
+        ('b', 'a'): lambda b, a: a * 2 == b,
+        ('a', 'c'): lambda a, c: c >= a,
+        ('c', 'a'): lambda c, a: c >= a,
+        ('b', 'c'): lambda b, c: b > c,
+        ('c', 'b'): lambda c, b: b > c,
     }
 
     show_solver(arcs, domains, constraints)
